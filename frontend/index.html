@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReviewSpace — Каталог</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F7F3EE;
+      --surface: #FDFAF6;
+      --white: #FFFFFF;
+      --accent: #4A6741;
+      --accent-hover: #3A5332;
+      --text: #1C1C1C;
+      --text-secondary: #6B6560;
+      --border: #E2DAD1;
+      --error-bg: #C0392B;
+      --success-bg: #4A6741;
+      --shadow: 0 1px 4px rgba(0,0,0,0.08);
+      --gold: #D4A843;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-weight: 400;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== Navbar ===== */
+    .navbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .navbar-inner {
+      width: 100%;
+      max-width: 860px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .navbar .logo {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .navbar .logo span { color: var(--accent); }
+
+    /* ===== Layout ===== */
+    .container {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    /* ===== Typography ===== */
+    h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; }
+    h1 { font-size: 24px; }
+    h2 { font-size: 18px; }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    /* ===== Card ===== */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    /* ===== Form ===== */
+    .form-section { margin-bottom: 36px; }
+
+    .form-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--white);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      transition: border-color 0.15s;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(74,103,65,0.12);
+    }
+
+    .field textarea { resize: vertical; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* ===== Buttons ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled { opacity: 0.55; cursor: default; }
+
+    /* ===== Product Grid ===== */
+    .products-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .products-count {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 14px;
+    }
+
+    .product-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .product-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(74,103,65,0.12);
+    }
+    .product-card h3 {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .product-card .desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .product-card .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+    .product-card .price {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--accent);
+    }
+    .product-card .reviews-count {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* ===== Spinner ===== */
+    .spinner-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== Toast ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast {
+      width: 320px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.45;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      animation: toast-in 0.25s ease-out;
+    }
+    .toast-success { background: var(--success-bg); }
+    .toast-error { background: var(--error-bg); }
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Empty state ===== */
+    .empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 600px) {
+      .container { padding: 20px 16px 48px; }
+      .form-row { grid-template-columns: 1fr; }
+      .product-grid { grid-template-columns: 1fr; }
+      .toast { width: calc(100vw - 32px); }
+      .toast-container { right: 16px; left: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="logo" href="index.html">Review<span>Space</span></a>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- Create product form -->
+    <section class="form-section">
+      <h1>Новый товар</h1>
+      <p class="section-subtitle">Заполните форму — товар сразу появится в каталоге.</p>
+
+      <form id="product-form" class="card form-grid" style="margin-top:16px">
+        <div class="field">
+          <label for="f-name">Название</label>
+          <input id="f-name" name="name" required placeholder="Например, Умная колонка X2">
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="f-price">Цена, &#8381;</label>
+            <input id="f-price" name="price" type="number" step="0.01" min="0" required placeholder="1999.00">
+          </div>
+          <div class="field" style="display:flex;align-items:end">
+            <button type="submit" class="btn btn-primary" id="submit-btn">Добавить товар</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-desc">Описание (необязательно)</label>
+          <textarea id="f-desc" name="description" rows="2" placeholder="Коротко о преимуществах товара"></textarea>
+        </div>
+      </form>
+    </section>
+
+    <!-- Product listing -->
+    <section>
+      <div class="products-header">
+        <h2>Каталог</h2>
+        <span class="products-count" id="count"></span>
+      </div>
+      <div id="products">
+        <div class="spinner-wrap"><div class="spinner"></div></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toasts"></div>
+
+  <script>
+    /* ── Config ── */
+    const API_BASE = `${location.protocol}//${location.hostname}:8000`;
+
+    /* ── Toast notifications ── */
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toasts');
+      const el = document.createElement('div');
+      el.className = `toast toast-${type}`;
+      el.textContent = message;
+      container.appendChild(el);
+      setTimeout(() => { el.remove(); }, 4000);
+    }
+
+    /* ── Load products ── */
+    async function loadProducts() {
+      const container = document.getElementById('products');
+      const countEl = document.getElementById('count');
+
+      try {
+        const res = await fetch(`${API_BASE}/products`);
+        if (!res.ok) throw new Error('Ошибка загрузки');
+        const data = await res.json();
+
+        countEl.textContent = data.length ? `${data.length} шт.` : '';
+        container.innerHTML = '';
+
+        if (!data.length) {
+          container.innerHTML = '<div class="empty">Товаров пока нет. Создайте первый!</div>';
+          return;
+        }
+
+        const grid = document.createElement('div');
+        grid.className = 'product-grid';
+
+        data.forEach(p => {
+          const reviewsText = p.reviews && p.reviews.length
+            ? `${p.reviews.length} отз.`
+            : 'Нет отзывов';
+
+          const a = document.createElement('a');
+          a.className = 'product-card';
+          a.href = `product.html?id=${p.id}`;
+          a.innerHTML = `
+            <h3>${esc(p.name)}</h3>
+            <div class="desc">${esc(p.description || 'Описание не указано')}</div>
+            <div class="meta">
+              <span class="price">${Number(p.price).toLocaleString('ru-RU')} &#8381;</span>
+              <span class="reviews-count">${reviewsText}</span>
+            </div>
+          `;
+          grid.appendChild(a);
+        });
+
+        container.appendChild(grid);
+      } catch (e) {
+        container.innerHTML = '<div class="empty">Не удалось загрузить каталог. Попробуйте позже.</div>';
+      }
+    }
+
+    /* ── Create product ── */
+    document.getElementById('product-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const btn = document.getElementById('submit-btn');
+      const fd = new FormData(form);
+      const payload = Object.fromEntries(fd.entries());
+      payload.price = Number(payload.price);
+
+      btn.disabled = true;
+      btn.textContent = 'Создание...';
+
+      try {
+        const res = await fetch(`${API_BASE}/products`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => null);
+          throw new Error(err?.detail || 'Ошибка создания товара');
+        }
+
+        form.reset();
+        showToast('Товар добавлен');
+        loadProducts();
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Добавить товар';
+      }
+    });
+
+    /* ── Utils ── */
+    function esc(str) {
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
+    /* ── Init ── */
+    loadProducts();
+  </script>
+</body>
+</html>

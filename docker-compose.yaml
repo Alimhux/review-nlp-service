@@ -1,0 +1,78 @@
+services:
+    db:
+        image: postgres:16-alpine
+        hostname: db
+        env_file:
+            - .env
+        volumes:
+            - db_data:/var/lib/postgresql/data
+        ports:
+            - "5433:5432"
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    rabbitmq:
+        image: rabbitmq:3-management
+        hostname: rabbitmq
+        env_file:
+            - .env
+        environment:
+            RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
+        healthcheck:
+            test: ["CMD", "rabbitmq-diagnostics", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 6
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+
+    api:
+        build:
+            context: .
+            dockerfile: api/Dockerfile
+        hostname: api
+        env_file:
+            - .env
+        ports:
+            - "8000:8000"
+        depends_on:
+            db:
+                condition: service_healthy
+            rabbitmq:
+                condition: service_healthy
+
+    worker:
+        build:
+            context: .
+            dockerfile: worker/Dockerfile
+        hostname: worker
+        env_file:
+            - .env
+        depends_on:
+            db:
+                condition: service_healthy
+            rabbitmq:
+                condition: service_healthy
+
+    frontend:
+        build:
+            context: .
+            dockerfile: frontend/Dockerfile
+        hostname: frontend
+        env_file:
+            - .env
+        ports:
+            - "8080:8080"
+        depends_on:
+            - api
+
+volumes:
+    db_data:
+    rabbitmq_data:

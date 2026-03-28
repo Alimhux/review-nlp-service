@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReviewSpace — Товар</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F7F3EE;
+      --surface: #FDFAF6;
+      --white: #FFFFFF;
+      --accent: #4A6741;
+      --accent-hover: #3A5332;
+      --text: #1C1C1C;
+      --text-secondary: #6B6560;
+      --border: #E2DAD1;
+      --error-bg: #C0392B;
+      --success-bg: #4A6741;
+      --shadow: 0 1px 4px rgba(0,0,0,0.08);
+      --gold: #D4A843;
+      --pending: #B8860B;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-weight: 400;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== Navbar ===== */
+    .navbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .navbar-inner {
+      width: 100%;
+      max-width: 860px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .navbar .logo {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .navbar .logo span { color: var(--accent); }
+    .back-link {
+      margin-left: auto;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    /* ===== Layout ===== */
+    .container {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+      display: grid;
+      gap: 24px;
+    }
+
+    /* ===== Typography ===== */
+    h1, h2, h3 { font-weight: 600; letter-spacing: -0.02em; }
+    h1 { font-size: 24px; }
+    h2 { font-size: 18px; }
+    h3 { font-size: 15px; }
+
+    /* ===== Card ===== */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    /* ===== Product header ===== */
+    .product-header { display: grid; gap: 6px; }
+    .product-header .description {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .product-header .price {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 4px;
+    }
+
+    /* ===== Reviews list ===== */
+    .reviews-section h2 {
+      margin-bottom: 14px;
+    }
+    .reviews-list {
+      display: grid;
+      gap: 10px;
+    }
+    .review-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .review-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .review-author {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .review-date {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .review-text {
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    /* Status badges */
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .badge-pending { background: #FFF3CD; color: var(--pending); }
+    .badge-rejected { background: #F8D7DA; color: var(--error-bg); }
+
+    /* ===== Review form ===== */
+    .form-section h3 { margin-bottom: 4px; }
+    .form-hint {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+
+    .review-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--white);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      transition: border-color 0.15s;
+    }
+    .field input:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(74,103,65,0.12);
+    }
+    .field textarea { resize: vertical; }
+
+    /* ===== Star rating ===== */
+    .star-rating {
+      display: inline-flex;
+      gap: 4px;
+      direction: rtl; /* trick: reverse order for CSS hover */
+    }
+    .star-rating input { display: none; }
+    .star-rating label {
+      cursor: pointer;
+      font-size: 24px;
+      color: var(--border);
+      transition: color 0.1s;
+      margin-bottom: 0;
+    }
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input:checked ~ label {
+      color: var(--gold);
+    }
+
+    /* Read-only stars in review items */
+    .stars-display {
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+    .star-on { color: var(--gold); }
+    .star-off { color: var(--border); }
+
+    /* ===== Buttons ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:disabled { opacity: 0.55; cursor: default; }
+
+    /* ===== Spinner ===== */
+    .spinner-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 40px 0;
+    }
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== Toast ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast {
+      width: 320px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      line-height: 1.45;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      animation: toast-in 0.25s ease-out;
+    }
+    .toast-success { background: var(--success-bg); }
+    .toast-error { background: var(--error-bg); }
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== Empty state ===== */
+    .empty {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 600px) {
+      .container { padding: 20px 16px 48px; }
+      .toast { width: calc(100vw - 32px); }
+      .toast-container { right: 16px; left: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a class="logo" href="index.html">Review<span>Space</span></a>
+      <a class="back-link" href="index.html">&larr; Каталог</a>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- Product details (filled by JS) -->
+    <div class="card product-header" id="product-card">
+      <div class="spinner-wrap"><div class="spinner"></div></div>
+    </div>
+
+    <!-- Reviews list -->
+    <div class="card reviews-section">
+      <h2>Отзывы <span id="reviews-count" style="font-weight:400;font-size:14px;color:var(--text-secondary)"></span></h2>
+      <div id="reviews-list" class="reviews-list">
+        <div class="spinner-wrap"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- Review form -->
+    <div class="card form-section">
+      <h3>Оставить отзыв</h3>
+      <p class="form-hint">Ваш отзыв пройдёт автоматическую модерацию перед публикацией.</p>
+
+      <form id="review-form" class="review-form">
+        <div class="field">
+          <label for="r-author">Имя (необязательно)</label>
+          <input id="r-author" name="author" placeholder="Ваше имя" maxlength="255">
+        </div>
+
+        <div class="field">
+          <label>Оценка</label>
+          <div class="star-rating" id="star-rating">
+            <input type="radio" name="rating" id="s5" value="5"><label for="s5">&#9733;</label>
+            <input type="radio" name="rating" id="s4" value="4"><label for="s4">&#9733;</label>
+            <input type="radio" name="rating" id="s3" value="3" checked><label for="s3">&#9733;</label>
+            <input type="radio" name="rating" id="s2" value="2"><label for="s2">&#9733;</label>
+            <input type="radio" name="rating" id="s1" value="1"><label for="s1">&#9733;</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="r-text">Текст отзыва</label>
+          <textarea id="r-text" name="text" rows="3" required placeholder="Поделитесь впечатлением..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="submit-btn">Отправить отзыв</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toasts"></div>
+
+  <script>
+    /* ── Config ── */
+    const API_BASE = `${location.protocol}//${location.hostname}:8000`;
+    const productId = new URLSearchParams(location.search).get('id');
+
+    if (!productId) {
+      document.querySelector('.container').innerHTML =
+        '<div class="card empty">ID товара не указан. <a href="index.html">Вернуться в каталог</a></div>';
+    }
+
+    /* ── Toast notifications ── */
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toasts');
+      const el = document.createElement('div');
+      el.className = `toast toast-${type}`;
+      el.textContent = message;
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    }
+
+    /* ── Utility: escape HTML ── */
+    function esc(str) {
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
+    /* ── Utility: format date ── */
+    function fmtDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    /* ── Utility: render stars ── */
+    function renderStars(n) {
+      let html = '';
+      for (let i = 1; i <= 5; i++) {
+        html += `<span class="${i <= n ? 'star-on' : 'star-off'}">&#9733;</span>`;
+      }
+      return `<span class="stars-display">${html}</span>`;
+    }
+
+    /* ── Load product details ── */
+    async function loadProduct() {
+      const card = document.getElementById('product-card');
+      try {
+        const res = await fetch(`${API_BASE}/products/${productId}`);
+        if (!res.ok) throw new Error();
+        const p = await res.json();
+
+        document.title = `ReviewSpace — ${p.name}`;
+        card.innerHTML = `
+          <h1>${esc(p.name)}</h1>
+          <div class="description">${esc(p.description || 'Описание не указано')}</div>
+          <div class="price">${Number(p.price).toLocaleString('ru-RU')} &#8381;</div>
+        `;
+
+        /* Render reviews that came with the product */
+        renderReviews(p.reviews || []);
+      } catch (e) {
+        card.innerHTML = '<div class="empty">Товар не найден. <a href="index.html">Вернуться</a></div>';
+      }
+    }
+
+    /* ── Render reviews ── */
+    function renderReviews(reviews) {
+      const container = document.getElementById('reviews-list');
+      const countEl = document.getElementById('reviews-count');
+
+      container.innerHTML = '';
+      countEl.textContent = reviews.length ? `(${reviews.length})` : '';
+
+      if (!reviews.length) {
+        container.innerHTML = '<div class="empty">Отзывов пока нет. Будьте первым!</div>';
+        return;
+      }
+
+      reviews.forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'review-item';
+        div.innerHTML = `
+          <div class="review-top">
+            <span class="review-author">${esc(r.author || 'Аноним')}</span>
+            <span class="review-date">${fmtDate(r.created_at)}</span>
+          </div>
+          <div class="review-text">${esc(r.text)}</div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    /* ── Add a "pending" review to the list immediately ── */
+    function addPendingReview(author, text) {
+      const container = document.getElementById('reviews-list');
+      /* Remove empty state if present */
+      const empty = container.querySelector('.empty');
+      if (empty) empty.remove();
+
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.dataset.pending = 'true';
+      div.innerHTML = `
+        <div class="review-top">
+          <span class="review-author">${esc(author || 'Аноним')} <span class="badge badge-pending">На модерации</span></span>
+          <span class="review-date">Только что</span>
+        </div>
+        <div class="review-text">${esc(text)}</div>
+      `;
+      container.prepend(div);
+      return div;
+    }
+
+    /* ── Poll moderation status, update UI when done ── */
+    async function pollModeration(reviewId, pendingDiv) {
+      for (let i = 0; i < 30; i++) {
+        await new Promise(r => setTimeout(r, 1000));
+        try {
+          const res = await fetch(`${API_BASE}/reviews/${reviewId}/status`);
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data.status === 'pending') continue;
+
+          if (data.status === 'rejected') {
+            /* Mark as rejected in-place */
+            const badge = pendingDiv.querySelector('.badge-pending');
+            if (badge) {
+              badge.className = 'badge badge-rejected';
+              badge.textContent = 'Отклонён';
+            }
+            showToast('Отзыв не прошёл модерацию и не будет опубликован.', 'error');
+          } else {
+            /* Published — reload clean list from server */
+            showToast('Отзыв опубликован!');
+            await loadProduct();
+          }
+          return;
+        } catch (e) { /* network hiccup, keep polling */ }
+      }
+      /* Timeout — inform user */
+      showToast('Модерация занимает больше времени, обновите страницу позже.', 'error');
+    }
+
+    /* ── Submit review ── */
+    document.getElementById('review-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const btn = document.getElementById('submit-btn');
+      const fd = new FormData(form);
+      const payload = {
+        product_id: productId,
+        text: fd.get('text'),
+        author: fd.get('author') || 'Аноним',
+      };
+
+      btn.disabled = true;
+      btn.textContent = 'Отправка...';
+
+      try {
+        const res = await fetch(`${API_BASE}/reviews/publish`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        /* If the server rejects outright (validation, etc.) */
+        if (!res.ok) {
+          const err = await res.json().catch(() => null);
+          const msg = err?.detail || 'Не удалось отправить отзыв';
+          showToast(msg, 'error');
+          return;
+        }
+
+        const review = await res.json();
+
+        /* Instantly show the review as "pending" */
+        const pendingDiv = addPendingReview(payload.author, payload.text);
+        form.reset();
+        /* Re-select default 3 stars */
+        document.getElementById('s3').checked = true;
+
+        /* Poll worker result in background */
+        pollModeration(review.id, pendingDiv);
+
+      } catch (err) {
+        showToast('Сетевая ошибка. Проверьте подключение.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Отправить отзыв';
+      }
+    });
+
+    /* ── Init ── */
+    if (productId) loadProduct();
+  </script>
+</body>
+</html>
